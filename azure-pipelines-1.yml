@@ -79,6 +79,93 @@ steps:
     TargetFolder: '$(Build.ArtifactStagingDirectory)\Utility'
   displayName: Copy Utility
 
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: Provision Environment
+  inputs:
+    deploymentScope: 'Resource Group'
+    ConnectedServiceName: 'WorkshopAzure'
+    subscriptionName: 'e16d929e-2ebf-4445-805e-c032ef6c4559'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(adhocrg)'
+    location: 'West US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.ArtifactStagingDirectory)\deploy\Azure ARM\ArmTemplate.json'
+    overrideParameters: '-appname $(adhocrg)'
+    deploymentMode: 'Incremental'
+  enabled: true
+
+- task: AzureRmWebAppDeployment@4
+  displayName: Deploy Commands Service
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'WorkshopAzure'
+    appType: 'webApp'
+    WebAppName: '$(adhocrg)-commands'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)\PokerLeagueManager.Commands.WebApi.zip'
+  enabled: true
+
+- task: AzureRmWebAppDeployment@4
+  displayName: Deploy Events Service
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'WorkshopAzure'
+    appType: 'webApp'
+    WebAppName: '$(adhocrg)-events'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)\PokerLeagueManager.Events.WebApi.zip'
+  enabled: true
+
+- task: AzureRmWebAppDeployment@4
+  displayName: Deploy Queries Service
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'WorkshopAzure'
+    appType: 'webApp'
+    WebAppName: '$(adhocrg)-queries'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)\PokerLeagueManager.Queries.WebApi.zip'
+  enabled: true
+
+- task: AzureRmWebAppDeployment@4
+  displayName: Deploy UI Website
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'WorkshopAzure'
+    appType: 'webApp'
+    WebAppName: '$(adhocrg)'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)\PokerLeagueManager.UI.Web.zip'
+  enabled: true
+
+- task: SqlAzureDacpacDeployment@1
+  displayName: Deploy Events DB
+  inputs:
+    azureSubscription: 'WorkshopAzure'
+    AuthenticationType: 'server'
+    ServerName: '$(adhocrg).database.windows.net'
+    DatabaseName: 'Events'
+    SqlUsername: 'antti'
+    SqlPassword: 'P2ssw0rd'
+    deployType: 'DacpacTask'
+    DeploymentAction: 'Publish'
+    DacpacFile: '$(Build.ArtifactStagingDirectory)\PokerLeagueManager.DB.EventStore.dacpac'
+    IpDetectionMethod: 'AutoDetect'
+    AdditionalArguments: '/p:CreateNewDatabase=true'
+  enabled: true
+
+- task: SqlAzureDacpacDeployment@1
+  displayName: Deploy Queries DB
+  inputs:
+    azureSubscription: 'WorkshopAzure'
+    AuthenticationType: 'server'
+    ServerName: '$(adhocrg).database.windows.net'
+    DatabaseName: 'Queries'
+    SqlUsername: 'antti'
+    SqlPassword: 'P2ssw0rd'
+    deployType: 'DacpacTask'
+    DeploymentAction: 'Publish'
+    DacpacFile: '$(Build.ArtifactStagingDirectory)\PokerLeagueManager.DB.QueryStore.dacpac'
+    IpDetectionMethod: 'AutoDetect'
+    AdditionalArguments: '/p:CreateNewDatabase=true'
+  enabled: true
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
