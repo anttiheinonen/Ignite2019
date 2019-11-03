@@ -58,9 +58,9 @@ steps:
     
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: 'deploy'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)' 
+    SourceFolder: '$(Build.SourcesDirectory)\deploy'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\deploy' 
 
 - task: CopyFiles@2
   inputs:
