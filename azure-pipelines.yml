@@ -45,6 +45,16 @@ steps:
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.ArtifactStagingDirectory)'
+    Contents: |
+      **/PokerLeagueManager.Commands.WebApi.zip
+      **/PokerLeagueManager.Events.WebApi.zip
+      **/PokerLeagueManager.Queries.WebApi.zip
+      **/PokerLeagueManager.UI.Web.zip
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
