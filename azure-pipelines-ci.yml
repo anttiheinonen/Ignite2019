@@ -83,8 +83,10 @@ steps:
   displayName: Provision Environment
   inputs:
     deploymentScope: 'Resource Group'
-    ConnectedServiceName: 'DevOps CAT Workshops (e16d929e-2ebf-4445-805e-c032ef6c4559)'
-    subscriptionName: 'e16d929e-2ebf-4445-805e-c032ef6c4559'
+    ConnectedServiceName: 'DevOps CAT Workshops (72f988bf-86f1-41af-91ab-2d7cd011db47)'
+    subscriptionName: '72f988bf-86f1-41af-91ab-2d7cd011db47
+'
+    
     action: 'Create Or Update Resource Group'
     resourceGroupName: '$(adhocrg)'
     location: 'West US 2'
