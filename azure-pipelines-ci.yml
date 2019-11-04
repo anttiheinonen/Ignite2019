@@ -184,10 +184,9 @@ steps:
   displayName: Delete Environment
   inputs:
     deploymentScope: 'Resource Group'
-    ConnectedServiceName: 'WorkshopAzure'
+    ConnectedServiceName: 'DevOps CAT Workshops (e16d929e-2ebf-4445-805e-c032ef6c4559)'
     subscriptionName: 'e16d929e-2ebf-4445-805e-c032ef6c4559'
     action: 'DeleteRG'
-    location: 'West US 2'
     resourceGroupName: '$(adhocrg)'
   enabled: true
 
